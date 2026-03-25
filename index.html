@@ -42,23 +42,40 @@
       color: #9cdcfe;
       min-height: 40px;
     }
-    #resizeHandle {
+    .resizeHandle {
       position: fixed;
-      bottom: 0; right: 0;
+      bottom: 0;
       width: 24px; height: 24px;
-      cursor: nwse-resize;
       z-index: 100;
+    }
+    #resizeHandleRight { right: 0; cursor: nwse-resize; }
+    #resizeHandleLeft  { left: 0;  cursor: nesw-resize; }
+    #resizeHandleRight {
       background:
         radial-gradient(circle, #666 1.5px, transparent 1.5px) 14px 14px,
         radial-gradient(circle, #666 1.5px, transparent 1.5px) 8px 14px,
         radial-gradient(circle, #666 1.5px, transparent 1.5px) 14px 8px;
       background-repeat: no-repeat;
     }
-    #resizeHandle:hover {
+    #resizeHandleRight:hover {
       background:
         radial-gradient(circle, #18a0fb 1.5px, transparent 1.5px) 14px 14px,
         radial-gradient(circle, #18a0fb 1.5px, transparent 1.5px) 8px 14px,
         radial-gradient(circle, #18a0fb 1.5px, transparent 1.5px) 14px 8px;
+      background-repeat: no-repeat;
+    }
+    #resizeHandleLeft {
+      background:
+        radial-gradient(circle, #666 1.5px, transparent 1.5px) 8px 14px,
+        radial-gradient(circle, #666 1.5px, transparent 1.5px) 14px 14px,
+        radial-gradient(circle, #666 1.5px, transparent 1.5px) 8px 8px;
+      background-repeat: no-repeat;
+    }
+    #resizeHandleLeft:hover {
+      background:
+        radial-gradient(circle, #18a0fb 1.5px, transparent 1.5px) 8px 14px,
+        radial-gradient(circle, #18a0fb 1.5px, transparent 1.5px) 14px 14px,
+        radial-gradient(circle, #18a0fb 1.5px, transparent 1.5px) 8px 8px;
       background-repeat: no-repeat;
     }
   </style>
@@ -72,7 +89,8 @@
   </div>
   <div id="status">Initialising…</div>
   <div id="output"></div>
-  <div id="resizeHandle"></div>
+  <div id="resizeHandleLeft" class="resizeHandle"></div>
+  <div id="resizeHandleRight" class="resizeHandle"></div>
   <script type="module" src="./index.ts"></script>
 </body>
 </html>

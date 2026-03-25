@@ -9,25 +9,30 @@ const status    = document.getElementById("status")    as HTMLDivElement;
 
 let liveMode = false;
 
-// ── Resize handle ────────────────────────────────────────────────────────────
-const resizeHandle = document.getElementById("resizeHandle") as HTMLDivElement;
-let resizing = false, startX = 0, startY = 0, startW = 0, startH = 0;
+// ── Resize handles ───────────────────────────────────────────────────────────
 const MIN_W = 280, MIN_H = 320;
 
-resizeHandle.addEventListener("pointerdown", (e) => {
-  resizing = true;
-  startX = e.clientX; startY = e.clientY;
-  startW = window.innerWidth; startH = window.innerHeight;
-  resizeHandle.setPointerCapture(e.pointerId);
-  e.preventDefault();
-});
-resizeHandle.addEventListener("pointermove", (e) => {
-  if (!resizing) return;
-  const w = Math.max(MIN_W, startW + (e.clientX - startX));
-  const h = Math.max(MIN_H, startH + (e.clientY - startY));
-  parent.postMessage({ pluginMessage: { type: "resize", width: Math.round(w), height: Math.round(h) } }, "*");
-});
-resizeHandle.addEventListener("pointerup", () => { resizing = false; });
+function attachResize(el: HTMLElement, invertX: boolean) {
+  let resizing = false, startX = 0, startY = 0, startW = 0, startH = 0;
+  el.addEventListener("pointerdown", (e) => {
+    resizing = true;
+    startX = e.clientX; startY = e.clientY;
+    startW = window.innerWidth; startH = window.innerHeight;
+    el.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  el.addEventListener("pointermove", (e) => {
+    if (!resizing) return;
+    const dx = invertX ? -(e.clientX - startX) : (e.clientX - startX);
+    const w = Math.max(MIN_W, startW + dx);
+    const h = Math.max(MIN_H, startH + (e.clientY - startY));
+    parent.postMessage({ pluginMessage: { type: "resize", width: Math.round(w), height: Math.round(h) } }, "*");
+  });
+  el.addEventListener("pointerup", () => { resizing = false; });
+}
+
+attachResize(document.getElementById("resizeHandleRight") as HTMLElement, false);
+attachResize(document.getElementById("resizeHandleLeft")  as HTMLElement, true);
 
 // Initialise the WASM reactor — runs Swift main.swift which exposes globalThis.figma2kv
 try {
