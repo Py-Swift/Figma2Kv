@@ -1,11 +1,15 @@
 import { runApplication } from "elementary-ui-browser-runtime";
 import appInit from "virtual:swift-wasm?init";
 
-const convertBtn = document.getElementById("convertBtn") as HTMLButtonElement;
-const liveBtn   = document.getElementById("liveBtn")   as HTMLButtonElement;
-const copyBtn   = document.getElementById("copyBtn")   as HTMLButtonElement;
-const output    = document.getElementById("output")    as HTMLDivElement;
-const status    = document.getElementById("status")    as HTMLDivElement;
+const convertBtn  = document.getElementById("convertBtn")  as HTMLButtonElement;
+const liveBtn     = document.getElementById("liveBtn")      as HTMLButtonElement;
+const copyBtn     = document.getElementById("copyBtn")      as HTMLButtonElement;
+const connectBtn  = document.getElementById("connectBtn")   as HTMLButtonElement;
+const serverUrl   = document.getElementById("serverUrl")    as HTMLInputElement;
+const output      = document.getElementById("output")       as HTMLDivElement;
+const status      = document.getElementById("status")       as HTMLDivElement;
+
+let connected = false;
 
 let liveMode = false;
 
@@ -64,6 +68,15 @@ copyBtn.addEventListener("click", () => {
   setTimeout(() => (copyBtn.textContent = "Copy KV"), 1500);
 });
 
+connectBtn.addEventListener("click", () => {
+  connected = !connected;
+  connectBtn.classList.toggle("active", connected);
+  connectBtn.textContent = connected ? "Connected" : "Connect";
+  status.textContent = connected
+    ? "Connected — will auto-send in live mode."
+    : "Disconnected.";
+});
+
 window.onmessage = (event: MessageEvent) => {
   const msg = event.data?.pluginMessage;
   if (!msg) return;
@@ -82,9 +95,17 @@ window.onmessage = (event: MessageEvent) => {
     }
     const result = api.convert(msg.data as string);
     if (result.kv) {
-      output.textContent = result.kv as string;
+      const kv = result.kv as string;
+      output.textContent = kv;
       copyBtn.style.display = "inline-block";
       status.textContent = liveMode ? "Live — updated." : "Done.";
+      if (liveMode && connected) {
+        fetch(serverUrl.value.trim(), {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: kv,
+        }).catch((e) => { status.textContent = "⚠ Send failed: " + e.message; });
+      }
     } else {
       output.textContent = "";
       status.textContent = "Error: " + ((result.error as string) ?? "unknown");
