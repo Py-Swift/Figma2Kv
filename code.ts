@@ -74,7 +74,7 @@ figma.ui.onmessage = (msg) => {
     const dw = msg.width - winW;
     winX -= dw; winW = msg.width; winH = msg.height;
     figma.ui.resize(winW, winH);
-    figma.ui.reposition({ x: winX, y: winY });
+    figma.ui.reposition(winX, winY);
     return;
   }
 
