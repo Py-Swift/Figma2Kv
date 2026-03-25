@@ -45,17 +45,21 @@
     #resizeHandle {
       position: fixed;
       bottom: 0; right: 0;
-      width: 16px; height: 16px;
+      width: 24px; height: 24px;
       cursor: nwse-resize;
       z-index: 100;
+      background:
+        radial-gradient(circle, #666 1.5px, transparent 1.5px) 14px 14px,
+        radial-gradient(circle, #666 1.5px, transparent 1.5px) 8px 14px,
+        radial-gradient(circle, #666 1.5px, transparent 1.5px) 14px 8px;
+      background-repeat: no-repeat;
     }
-    #resizeHandle::after {
-      content: '';
-      position: absolute;
-      bottom: 3px; right: 3px;
-      width: 6px; height: 6px;
-      border-right: 2px solid #555;
-      border-bottom: 2px solid #555;
+    #resizeHandle:hover {
+      background:
+        radial-gradient(circle, #18a0fb 1.5px, transparent 1.5px) 14px 14px,
+        radial-gradient(circle, #18a0fb 1.5px, transparent 1.5px) 8px 14px,
+        radial-gradient(circle, #18a0fb 1.5px, transparent 1.5px) 14px 8px;
+      background-repeat: no-repeat;
     }
   </style>
 </head>
