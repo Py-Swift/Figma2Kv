@@ -1,0 +1,60 @@
+{
+  "originHash" : "79b09a853501c3a9e2fd4fcf42afc5d4a100450d514e2480cf240a3de2ffa2cb",
+  "pins" : [
+    {
+      "identity" : "javascriptkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftwasm/JavaScriptKit",
+      "state" : {
+        "revision" : "5529520b25638aa86765ab33b175289f1ab263a3",
+        "version" : "0.46.5"
+      }
+    },
+    {
+      "identity" : "javascriptkitextensions",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Py-Swift/JavaScriptKitExtensions",
+      "state" : {
+        "branch" : "master",
+        "revision" : "81cf0a32977f5ee509e64faa26c3605f8da7efc4"
+      }
+    },
+    {
+      "identity" : "pyswiftast",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Py-Swift/PySwiftAST.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "ce91b58f89c8211329b6f4288c82e412779f40a7"
+      }
+    },
+    {
+      "identity" : "swift-algorithms",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-algorithms",
+      "state" : {
+        "revision" : "87e50f483c54e6efd60e885f7f5aa946cee68023",
+        "version" : "1.2.1"
+      }
+    },
+    {
+      "identity" : "swift-numerics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-numerics.git",
+      "state" : {
+        "revision" : "0c0290ff6b24942dadb83a929ffaaa1481df04a2",
+        "version" : "1.1.1"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax",
+      "state" : {
+        "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
+        "version" : "602.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}

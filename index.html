@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Figma2Kv</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      margin: 0; padding: 12px;
+      background: #1e1e1e; color: #ccc;
+    }
+    h2 { font-size: 13px; margin: 0 0 8px; color: #fff; letter-spacing: 0.3px; }
+    #row { display: flex; gap: 8px; align-items: center; }
+    button {
+      background: #18a0fb; color: #fff; border: none;
+      padding: 6px 14px; border-radius: 4px;
+      cursor: pointer; font-size: 12px;
+    }
+    button:hover { background: #0d8de3; }
+    #copyBtn { display: none; background: #3c3c3c; }
+    #copyBtn:hover { background: #555; }
+    #status { font-size: 11px; color: #888; }
+    #output {
+      margin-top: 10px;
+      background: #2d2d2d;
+      border-radius: 4px;
+      padding: 10px;
+      font-family: "SF Mono", "Fira Mono", monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      white-space: pre;
+      overflow: auto;
+      max-height: 390px;
+      color: #9cdcfe;
+      min-height: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Figma → KV</h2>
+  <div id="row">
+    <button id="convertBtn">Convert selection</button>
+    <button id="copyBtn">Copy KV</button>
+  </div>
+  <div id="status">Initialising…</div>
+  <div id="output"></div>
+  <script type="module" src="./index.ts"></script>
+</body>
+</html>

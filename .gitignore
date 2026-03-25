@@ -1,0 +1,13 @@
+# Swift build artifacts
+.build/
+*.o
+*.d
+
+# Node
+node_modules/
+dist/
+
+# Misc
+.DS_Store
+*.resolved.bak
+src/
