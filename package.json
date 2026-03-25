@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@bjorn3/browser_wasi_shim": "~0.4.2",
-    "elementary-ui-browser-runtime": "file:.build/checkouts/elementary-ui/BrowserRuntime"
+    "elementary-ui-browser-runtime": "file:./BrowserRuntime"
   },
   "devDependencies": {
     "@elementary-swift/vite-plugin-swift-wasm": "^0.1.2",
