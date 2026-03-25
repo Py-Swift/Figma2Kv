@@ -1,0 +1,73 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Swift toolchain ─────────────────────────────────────────────────────
+      - name: Install swiftly
+        run: |
+          curl -O https://download.swift.org/swiftly/darwin/swiftly.pkg
+          sudo installer -pkg swiftly.pkg -target /
+          echo "$HOME/.swiftly/bin" >> $GITHUB_PATH
+
+      - name: Install Swift 6.2.1 via swiftly
+        run: swiftly install 6.2.1 --use
+
+      - name: Verify Swift version
+        run: swift --version
+
+      # ── WASM SDK ─────────────────────────────────────────────────────────────
+      - name: Install Swift WASM SDK
+        run: |
+          swift sdk install \
+            https://github.com/swiftwasm/swift/releases/download/swift-6.2.1-RELEASE/swift-6.2.1-RELEASE_wasm32-unknown-wasi.artifactbundle.zip
+          swift sdk list
+
+      # ── LLVM (clang + llvm-ar for C shims in swift-numerics etc) ────────────
+      - name: Install LLVM via Homebrew
+        run: |
+          brew install llvm
+          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
+          echo "CC=/opt/homebrew/opt/llvm/bin/clang"   >> $GITHUB_ENV
+          echo "AR=/opt/homebrew/opt/llvm/bin/llvm-ar" >> $GITHUB_ENV
+
+      # ── Node / npm ───────────────────────────────────────────────────────────
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      # ── Build ────────────────────────────────────────────────────────────────
+      - name: Build plugin
+        run: npm run build
+        env:
+          SWIFT_SDK_ID: swift-6.2.1-RELEASE_wasm
+
+      # ── Package ──────────────────────────────────────────────────────────────
+      - name: Zip dist
+        run: |
+          zip -r Figma2Kv-${{ github.ref_name }}.zip dist/ manifest.json
+
+      # ── Release ──────────────────────────────────────────────────────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Figma2Kv-${{ github.ref_name }}.zip
+          generate_release_notes: true
