@@ -12,7 +12,7 @@ let liveMode = false;
 // ── Resize handles ───────────────────────────────────────────────────────────
 const MIN_W = 280, MIN_H = 320;
 
-function attachResize(el: HTMLElement, resizeW: boolean, leftEdge = false) {
+function attachResize(el: HTMLElement, resizeW: boolean) {
   let resizing = false, startX = 0, startY = 0, startW = 0, startH = 0;
   el.addEventListener("pointerdown", (e) => {
     resizing = true;
@@ -23,20 +23,15 @@ function attachResize(el: HTMLElement, resizeW: boolean, leftEdge = false) {
   });
   el.addEventListener("pointermove", (e) => {
     if (!resizing) return;
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
-    const w = resizeW
-      ? Math.max(MIN_W, leftEdge ? startW - dx : startW + dx)
-      : startW;
-    const h = Math.max(MIN_H, startH + dy);
-    const type = leftEdge ? "resizeLeft" : "resize";
-    parent.postMessage({ pluginMessage: { type, width: Math.round(w), height: Math.round(h) } }, "*");
+    const w = resizeW ? Math.max(MIN_W, startW + (e.clientX - startX)) : startW;
+    const h = Math.max(MIN_H, startH + (e.clientY - startY));
+    parent.postMessage({ pluginMessage: { type: "resize", width: Math.round(w), height: Math.round(h) } }, "*");
   });
   el.addEventListener("pointerup", () => { resizing = false; });
 }
 
-attachResize(document.getElementById("resizeHandleRight") as HTMLElement, true,  false);
-attachResize(document.getElementById("resizeHandleLeft")  as HTMLElement, true,  true);
+attachResize(document.getElementById("resizeHandleRight") as HTMLElement, true);
+attachResize(document.getElementById("resizeHandleLeft")  as HTMLElement, false);
 
 // Initialise the WASM reactor — runs Swift main.swift which exposes globalThis.figma2kv
 try {
