@@ -66,7 +66,7 @@ jobs:
       # ── Package ──────────────────────────────────────────────────────────────
       - name: Zip dist
         run: |
-          zip -r Figma2Kv-${{ github.ref_name }}.zip dist/ manifest.json
+          zip Figma2Kv-${{ github.ref_name }}.zip dist/index.html dist/code.js manifest.json
 
       # ── Release ──────────────────────────────────────────────────────────────
       - name: Create GitHub Release
