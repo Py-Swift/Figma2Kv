@@ -34,8 +34,9 @@ jobs:
       # ── WASM SDK ─────────────────────────────────────────────────────────────
       - name: Install Swift WASM SDK
         run: |
-          swift sdk install \
-            https://github.com/swiftwasm/swift/releases/download/swift-6.2.1-RELEASE/swift-6.2.1-RELEASE_wasm32-unknown-wasi.artifactbundle.zip
+          curl -L https://download.swift.org/swift-6.2.1-release/wasm-sdk/swift-6.2.1-RELEASE/swift-6.2.1-RELEASE_wasm.artifactbundle.tar.gz \
+            -o wasm-sdk.tar.gz
+          swift sdk install wasm-sdk.tar.gz
           swift sdk list
 
       # ── LLVM (clang + llvm-ar for C shims in swift-numerics etc) ────────────
