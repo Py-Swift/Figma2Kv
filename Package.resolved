@@ -1,6 +1,24 @@
 {
-  "originHash" : "79b09a853501c3a9e2fd4fcf42afc5d4a100450d514e2480cf240a3de2ffa2cb",
+  "originHash" : "1f606864f8de10aa1fbc6fcf65af392119760aa0735b4682de79df3bcd0d063f",
   "pins" : [
+    {
+      "identity" : "elementary",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/elementary-swift/elementary",
+      "state" : {
+        "revision" : "5e68104040659cc33ffa5e0d5150ecfaa60f9f79",
+        "version" : "0.7.0"
+      }
+    },
+    {
+      "identity" : "elementary-ui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/elementary-swift/elementary-ui.git",
+      "state" : {
+        "revision" : "7b1083a0d44398d5d84f263783ce1f7f740ea507",
+        "version" : "0.1.8"
+      }
+    },
     {
       "identity" : "javascriptkit",
       "kind" : "remoteSourceControl",
@@ -53,6 +71,15 @@
       "state" : {
         "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
         "version" : "602.0.0"
+      }
+    },
+    {
+      "identity" : "swiftykvlang",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Py-Swift/SwiftyKvLang",
+      "state" : {
+        "branch" : "master",
+        "revision" : "6c462bbddc8e862103f4db1991684d28756e5e48"
       }
     }
   ],

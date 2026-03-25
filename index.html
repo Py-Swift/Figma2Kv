@@ -21,6 +21,10 @@
     button:hover { background: #0d8de3; }
     #copyBtn { display: none; background: #3c3c3c; }
     #copyBtn:hover { background: #555; }
+    #liveBtn { background: #3c3c3c; }
+    #liveBtn:hover { background: #555; }
+    #liveBtn.active { background: #1a7a3a; }
+    #liveBtn.active:hover { background: #1f9445; }
     #status { font-size: 11px; color: #888; }
     #output {
       margin-top: 10px;
@@ -42,6 +46,7 @@
   <h2>Figma → KV</h2>
   <div id="row">
     <button id="convertBtn">Convert selection</button>
+    <button id="liveBtn">⦿ Live</button>
     <button id="copyBtn">Copy KV</button>
   </div>
   <div id="status">Initialising…</div>

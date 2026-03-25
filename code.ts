@@ -33,9 +33,7 @@ function serialise(node: SceneNode): object {
   return base;
 }
 
-figma.ui.onmessage = (msg) => {
-  if (msg.type !== "convert") return;
-
+function sendSelection() {
   const selection = figma.currentPage.selection;
   const nodes =
     selection.length > 0
@@ -52,4 +50,29 @@ figma.ui.onmessage = (msg) => {
     type: "figmaNodes",
     data: JSON.stringify(serialised),
   });
+}
+
+let liveHandler: (() => void) | null = null;
+
+figma.ui.onmessage = (msg) => {
+  if (msg.type === "convert") {
+    sendSelection();
+    return;
+  }
+
+  if (msg.type === "setLive") {
+    if (msg.enabled) {
+      if (!liveHandler) {
+        liveHandler = () => sendSelection();
+        figma.on("selectionchange", liveHandler);
+      }
+      // Send current selection immediately when live mode is turned on
+      sendSelection();
+    } else {
+      if (liveHandler) {
+        figma.off("selectionchange", liveHandler);
+        liveHandler = null;
+      }
+    }
+  }
 };

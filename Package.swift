@@ -5,8 +5,8 @@ let package = Package(
     name: "Figma2Kv",
     platforms: [.macOS(.v15)],
     dependencies: [
-        .package(url: "https://github.com/Py-Swift/SwiftyKvLang", branch: "main"),
-        //.package(url: "https://github.com/elementary-swift/elementary-ui.git", from: "0.1.3"),
+        .package(url: "https://github.com/Py-Swift/SwiftyKvLang", branch: "master"),
+        .package(url: "https://github.com/elementary-swift/elementary-ui.git", from: "0.1.3"),
         .package(url: "https://github.com/swiftwasm/JavaScriptKit", from: "0.46.3"),
         .package(url: "https://github.com/Py-Swift/JavaScriptKitExtensions", branch: "master"),
     ],

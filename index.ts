@@ -2,9 +2,12 @@ import { runApplication } from "elementary-ui-browser-runtime";
 import appInit from "virtual:swift-wasm?init";
 
 const convertBtn = document.getElementById("convertBtn") as HTMLButtonElement;
-const copyBtn = document.getElementById("copyBtn") as HTMLButtonElement;
-const output = document.getElementById("output") as HTMLDivElement;
-const status = document.getElementById("status") as HTMLDivElement;
+const liveBtn   = document.getElementById("liveBtn")   as HTMLButtonElement;
+const copyBtn   = document.getElementById("copyBtn")   as HTMLButtonElement;
+const output    = document.getElementById("output")    as HTMLDivElement;
+const status    = document.getElementById("status")    as HTMLDivElement;
+
+let liveMode = false;
 
 // Initialise the WASM reactor — runs Swift main.swift which exposes globalThis.figma2kv
 try {
@@ -21,6 +24,14 @@ convertBtn.addEventListener("click", () => {
   status.textContent = "Converting…";
   copyBtn.style.display = "none";
   parent.postMessage({ pluginMessage: { type: "convert" } }, "*");
+});
+
+liveBtn.addEventListener("click", () => {
+  liveMode = !liveMode;
+  liveBtn.classList.toggle("active", liveMode);
+  liveBtn.textContent = liveMode ? "⦿ Live (on)" : "⦿ Live";
+  status.textContent = liveMode ? "Live mode on — watching selection…" : "Live mode off.";
+  parent.postMessage({ pluginMessage: { type: "setLive", enabled: liveMode } }, "*");
 });
 
 copyBtn.addEventListener("click", () => {
@@ -49,7 +60,7 @@ window.onmessage = (event: MessageEvent) => {
     if (result.kv) {
       output.textContent = result.kv as string;
       copyBtn.style.display = "inline-block";
-      status.textContent = "Done.";
+      status.textContent = liveMode ? "Live — updated." : "Done.";
     } else {
       output.textContent = "";
       status.textContent = "Error: " + ((result.error as string) ?? "unknown");
