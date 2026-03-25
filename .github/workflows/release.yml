@@ -21,6 +21,8 @@ jobs:
         run: |
           curl -L https://download.swift.org/swiftly/darwin/swiftly.pkg > swiftly.pkg
           installer -pkg swiftly.pkg -target CurrentUserHomeDirectory
+          export PATH="$HOME/.swiftly/bin:$PATH"
+          swiftly init --no-modify-profile
           echo "$HOME/.swiftly/bin" >> $GITHUB_PATH
 
       - name: Install Swift 6.2.1 via swiftly
