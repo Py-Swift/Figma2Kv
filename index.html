@@ -6,10 +6,12 @@
   <title>Figma2Kv</title>
   <style>
     * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
       margin: 0; padding: 12px;
       background: #1e1e1e; color: #ccc;
+      display: flex; flex-direction: column;
     }
     h2 { font-size: 13px; margin: 0 0 8px; color: #fff; letter-spacing: 0.3px; }
     #row { display: flex; gap: 8px; align-items: center; }
@@ -36,9 +38,24 @@
       line-height: 1.5;
       white-space: pre;
       overflow: auto;
-      max-height: 390px;
+      flex: 1;
       color: #9cdcfe;
       min-height: 40px;
+    }
+    #resizeHandle {
+      position: fixed;
+      bottom: 0; right: 0;
+      width: 16px; height: 16px;
+      cursor: nwse-resize;
+      z-index: 100;
+    }
+    #resizeHandle::after {
+      content: '';
+      position: absolute;
+      bottom: 3px; right: 3px;
+      width: 6px; height: 6px;
+      border-right: 2px solid #555;
+      border-bottom: 2px solid #555;
     }
   </style>
 </head>
@@ -51,6 +68,7 @@
   </div>
   <div id="status">Initialising…</div>
   <div id="output"></div>
+  <div id="resizeHandle"></div>
   <script type="module" src="./index.ts"></script>
 </body>
 </html>

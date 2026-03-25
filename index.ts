@@ -9,6 +9,26 @@ const status    = document.getElementById("status")    as HTMLDivElement;
 
 let liveMode = false;
 
+// ── Resize handle ────────────────────────────────────────────────────────────
+const resizeHandle = document.getElementById("resizeHandle") as HTMLDivElement;
+let resizing = false, startX = 0, startY = 0, startW = 0, startH = 0;
+const MIN_W = 280, MIN_H = 320;
+
+resizeHandle.addEventListener("pointerdown", (e) => {
+  resizing = true;
+  startX = e.clientX; startY = e.clientY;
+  startW = window.innerWidth; startH = window.innerHeight;
+  resizeHandle.setPointerCapture(e.pointerId);
+  e.preventDefault();
+});
+resizeHandle.addEventListener("pointermove", (e) => {
+  if (!resizing) return;
+  const w = Math.max(MIN_W, startW + (e.clientX - startX));
+  const h = Math.max(MIN_H, startH + (e.clientY - startY));
+  parent.postMessage({ pluginMessage: { type: "resize", width: Math.round(w), height: Math.round(h) } }, "*");
+});
+resizeHandle.addEventListener("pointerup", () => { resizing = false; });
+
 // Initialise the WASM reactor — runs Swift main.swift which exposes globalThis.figma2kv
 try {
   console.log("[figma2kv] Starting WASM init...");

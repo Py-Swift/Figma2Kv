@@ -60,6 +60,11 @@ figma.ui.onmessage = (msg) => {
     return;
   }
 
+  if (msg.type === "resize") {
+    figma.ui.resize(msg.width, msg.height);
+    return;
+  }
+
   if (msg.type === "setLive") {
     if (msg.enabled) {
       if (!liveHandler) {
