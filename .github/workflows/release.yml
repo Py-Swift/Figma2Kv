@@ -19,8 +19,8 @@ jobs:
       # ── Swift toolchain ─────────────────────────────────────────────────────
       - name: Install swiftly
         run: |
-          curl -O https://download.swift.org/swiftly/darwin/swiftly.pkg
-          sudo installer -pkg swiftly.pkg -target /
+          curl -L https://download.swift.org/swiftly/darwin/swiftly.pkg > swiftly.pkg
+          installer -pkg swiftly.pkg -target CurrentUserHomeDirectory
           echo "$HOME/.swiftly/bin" >> $GITHUB_PATH
 
       - name: Install Swift 6.2.1 via swiftly
