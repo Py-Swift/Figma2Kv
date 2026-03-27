@@ -1,16 +1,17 @@
-/// Figma node types the plugin serialises and sends to WASM
+import FigmaApi
+
+/// Plugin-facing Figma node model.
 ///
-/// Only the subset of Figma's API shape we need for KV mapping.
-/// The plugin walks the scene tree and produces JSON matching these types.
+/// Represents the subset of the Figma scene tree that the plugin serialises
+/// and sends to the server. Types that are already defined in `FigmaApi`
+/// (FigmaBounds, FigmaPaint, FigmaLayoutGrid, FigmaColor) are used directly.
+///
+/// Note: `type` and `layoutMode` are kept as `String` rather than the REST-API
+/// enums because the Plugin API serialises them identically as raw strings.
 
-// MARK: - Root payload
+// MARK: - PluginNode
 
-/// Top-level array sent from the plugin: one entry per selected node
-typealias FigmaSelection = [FigmaNode]
-
-// MARK: - Node
-
-public struct FigmaNode: Codable, Sendable {
+public struct PluginNode: Codable, Sendable {
     /// Figma node type: FRAME, GROUP, COMPONENT, INSTANCE, TEXT,
     /// RECTANGLE, ELLIPSE, VECTOR, etc.
     public let type: String
@@ -22,7 +23,7 @@ public struct FigmaNode: Codable, Sendable {
     public let absoluteBoundingBox: FigmaBounds?
 
     /// Fill paints applied to this node
-    public let fills: [FigmaFill]?
+    public let fills: [FigmaPaint]?
 
     /// Text content (TEXT nodes only)
     public let characters: String?
@@ -31,37 +32,35 @@ public struct FigmaNode: Codable, Sendable {
     public let fontSize: Double?
 
     /// Child nodes (FRAME, GROUP, COMPONENT, INSTANCE)
-    public let children: [FigmaNode]?
-}
+    public let children: [PluginNode]?
 
-// MARK: - Bounds
+    /// Auto layout direction: "HORIZONTAL" | "VERTICAL" | "NONE" | "GRID"
+    public let layoutMode: String?
 
-public struct FigmaBounds: Codable, Sendable {
-    public let x: Double
-    public let y: Double
-    public let width: Double
-    public let height: Double
-}
+    /// Auto layout wrap: "WRAP" | "NO_WRAP"
+    public let layoutWrap: String?
 
-// MARK: - Fill
+    /// How this node sizes itself on each axis: "FIXED" | "FILL" | "HUG"
+    public let layoutSizingHorizontal: String?
+    public let layoutSizingVertical: String?
 
-public struct FigmaFill: Codable, Sendable {
-    /// Paint type: SOLID, GRADIENT_LINEAR, IMAGE, etc.
-    public let type: String
+    /// Number of columns when layoutMode == "GRID"
+    public let gridColumnCount: Int?
+    /// Number of rows when layoutMode == "GRID"
+    public let gridRowCount: Int?
+    /// Horizontal gap between grid cells
+    public let gridColumnGap: Double?
+    /// Vertical gap between grid cells
+    public let gridRowGap: Double?
 
-    /// RGBA colour (present for SOLID fills)
-    public let color: FigmaColor?
+    /// Gap between children in HORIZONTAL / VERTICAL auto-layout
+    public let itemSpacing: Double?
+    /// Padding (HORIZONTAL / VERTICAL auto-layout and GRID)
+    public let paddingLeft: Double?
+    public let paddingRight: Double?
+    public let paddingTop: Double?
+    public let paddingBottom: Double?
 
-    /// Overall opacity of the fill layer (0-1, defaults to 1)
-    public let opacity: Double?
-}
-
-// MARK: - Color
-
-/// Figma colour components – each in 0…1 range, same as Kivy
-public struct FigmaColor: Codable, Sendable {
-    public let r: Double
-    public let g: Double
-    public let b: Double
-    public let a: Double?
+    /// Visual layout grids attached to this frame
+    public let layoutGrids: [FigmaLayoutGrid]?
 }
