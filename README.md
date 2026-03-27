@@ -1,79 +1,86 @@
 # Figma2Kv
 
-A Figma plugin that converts your Figma node tree into [Kivy](https://kivy.org) `.kv` language, powered by a Swift parser compiled to WebAssembly.
+A pure Swift library that converts a [FigmaApi](https://github.com/Py-Swift/FigmaApi) node tree into [Kivy](https://kivy.org) `.kv` language using [SwiftyKvLang](https://github.com/Py-Swift/SwiftyKvLang).
 
 ---
 
-## Installation
+## Overview
 
-### Option A — Download the pre-built release (recommended)
-
-1. Go to the [Releases](https://github.com/Py-Swift/Figma2Kv/releases) page and download the latest `Figma2Kv-X.X.X.zip`
-2. Unzip it anywhere on your machine
-3. Open the **Figma desktop app** and open any file
-4. Press `Cmd+/` (Mac) or `Ctrl+/` (Windows) to open Quick Actions
-5. Search for **"Import plugin from manifest"** and select it
-6. Navigate to the unzipped folder and select `manifest.json`
-7. The plugin now appears under **Plugins → Figma2Kv**
-
-### Option B — Build from source
-
-Requirements:
-- macOS with [swiftly](https://github.com/swiftlang/swiftly) installed
-- Node.js 22+
-- LLVM (`brew install llvm`)
-
-```bash
-# Clone
-git clone https://github.com/Py-Swift/Figma2Kv.git
-cd Figma2Kv
-
-# Install npm deps
-npm install
-
-# Install Swift 6.2.1 and the WASM SDK
-swiftly install 6.2.1 --use
-swift sdk install \
-  https://github.com/swiftwasm/swift/releases/download/swift-6.2.1-RELEASE/swift-6.2.1-RELEASE_wasm32-unknown-wasi.artifactbundle.zip
-
-# Build
-npm run build
+```
+[FigmaApi types] → FigmaMapper → KvParser/KvCodeGen → .kv string
 ```
 
-Then follow steps 3–7 from Option A, pointing at the `manifest.json` in this folder.
+- **Input** — `[PluginNode]`: a subset of the Figma scene tree, decoded from the JSON the plugin sends to the server. Uses `FigmaPaint`, `FigmaBounds`, and `FigmaLayoutGrid` from `FigmaApi` directly.
+- **Output** — a `.kv` string ready to use in a Kivy application.
+
+---
+
+## Adding as a dependency
+
+```swift
+// Package.swift
+dependencies: [
+    .package(url: "https://github.com/Py-Swift/Figma2Kv", branch: "master"),
+],
+targets: [
+    .target(dependencies: [
+        .product(name: "Figma2Kv", package: "Figma2Kv"),
+    ]),
+]
+```
+
+`import Figma2Kv` also re-exports `FigmaApi`, so all Figma types are available from a single import.
 
 ---
 
 ## Usage
 
-1. Select one or more nodes on the Figma canvas
-2. Open the plugin (**Plugins → Figma2Kv**)
-3. Click **Convert selection** — the `.kv` output appears in the panel
-4. Click **Copy KV** to copy it to your clipboard
+```swift
+import Figma2Kv
 
-### Live mode
+// From a JSON string (array of PluginNode)
+let kv = try FigmaMapper.convert(json: jsonString)
 
-Click **⦿ Live** to enable live mode. The output will automatically update every time you click a different node on the canvas — no need to press Convert each time.
-
-### Resizing the panel
-
-- Drag the **bottom-right** corner to resize width and height
-- Drag the **bottom-left** corner to resize height only
+// From already-decoded nodes
+let nodes: [PluginNode] = try JSONDecoder().decode([PluginNode].self, from: data)
+let kv = FigmaMapper.convert(nodes: nodes)
+```
 
 ---
 
-## Development
+## Node → KV mapping
 
-```bash
-npm run build        # full build (Swift WASM + Vite + tsc + inline)
-npm run build:code   # recompile code.ts only (no WASM rebuild)
-```
+| Figma type | KV output |
+|---|---|
+| `CANVAS` / `PAGE` | `Screen:` |
+| `COMPONENT` | `<Name@Base>:` rule |
+| `FRAME` / `INSTANCE` | auto-detected layout widget |
+| `GROUP` | canvas instructions bubbled to parent |
+| `TEXT` | `Label:` |
+| `RECTANGLE` / `VECTOR` | `Widget:` + canvas `Rectangle` |
+| `ELLIPSE` | `Widget:` + canvas `Ellipse` |
 
-To release a new version, push a plain semver tag:
+### Auto-layout detection
 
-```bash
-git tag 0.1.0 && git push origin 0.1.0
-```
+| `layoutMode` | KV widget |
+|---|---|
+| `HORIZONTAL` | `BoxLayout` (orientation: horizontal) |
+| `VERTICAL` | `BoxLayout` (orientation: vertical) |
+| `GRID` | `GridLayout` (cols from `gridColumnCount`) |
+| none | `FloatLayout` |
 
-GitHub Actions will build on `macos-15`, produce `Figma2Kv-0.1.0.zip`, and attach it to the release automatically.
+### Frame naming conventions
+
+| Layer name | KV output |
+|---|---|
+| `BoxLayout` (registry hit) | `BoxLayout:` inline |
+| `MyWidget:<BoxLayout>` | `<MyWidget@BoxLayout>:` rule |
+| `MyWidget:BoxLayout` | `MyWidget:` (external Python class) |
+
+---
+
+## Dependencies
+
+- [FigmaApi](https://github.com/Py-Swift/FigmaApi) — Figma type primitives
+- [SwiftyKvLang](https://github.com/Py-Swift/SwiftyKvLang) — KvParser + KivyWidgetRegistry + KvCodeGen
 
