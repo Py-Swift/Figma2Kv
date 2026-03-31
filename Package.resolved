@@ -1,5 +1,5 @@
 {
-  "originHash" : "dd0b794672d940f637c561b7869fe5610236dba066f63ad885c23ba94fb92a06",
+  "originHash" : "70d09cc839896d36923adc2ade88c22a82baf4e6a350c3d33dc13ac0b5208fd0",
   "pins" : [
     {
       "identity" : "pyswiftast",
@@ -7,25 +7,7 @@
       "location" : "https://github.com/Py-Swift/PySwiftAST.git",
       "state" : {
         "branch" : "master",
-        "revision" : "ce91b58f89c8211329b6f4288c82e412779f40a7"
-      }
-    },
-    {
-      "identity" : "swift-algorithms",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-algorithms",
-      "state" : {
-        "revision" : "87e50f483c54e6efd60e885f7f5aa946cee68023",
-        "version" : "1.2.1"
-      }
-    },
-    {
-      "identity" : "swift-numerics",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-numerics.git",
-      "state" : {
-        "revision" : "0c0290ff6b24942dadb83a929ffaaa1481df04a2",
-        "version" : "1.1.1"
+        "revision" : "c757b0d9e7975b59d3c670fea8a99b043e2cb4ba"
       }
     },
     {

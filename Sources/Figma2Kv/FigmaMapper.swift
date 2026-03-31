@@ -238,8 +238,10 @@ public enum FigmaMapper {
                 line: currentLine
             ))
 
-        case .rectangle, .vector:
-            // Standalone shape widget — canvas covers self entirely
+        case .rectangle, .vector, .polygon, .regularPolygon, .star, .line:
+            // Standalone shape widget — canvas covers the bounding box
+            // (polygon/star/line all fall back to a Rectangle proxy since
+            // Kivy canvas has no direct polygon primitive)
             return .widget(KvWidget(
                 name: "Widget",
                 properties: posP,
@@ -536,7 +538,7 @@ public enum FigmaMapper {
         var instrs: [KvCanvasInstruction] = []
         for child in node.children ?? [] {
             switch child.type {
-            case .rectangle, .vector:
+            case .rectangle, .vector, .polygon, .regularPolygon, .star, .line:
                 if let canvas = fillCanvas(node: child, line: &line, shape: "Rectangle", parentBounds: parentBounds, posRelative: posRelative) {
                     instrs.append(contentsOf: canvas.instructions)
                 }
