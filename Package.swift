@@ -1,7 +1,7 @@
 // swift-tools-version: 6.0
 import PackageDescription
 
-let local = true
+let local = false
 
 let figmaApi: Package.Dependency = local
     ? .package(path: "../FigmaApi")
